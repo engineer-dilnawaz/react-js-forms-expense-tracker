@@ -7,6 +7,10 @@ export default function ExpenseForm({ setExpenses }) {
     amount: "",
   });
 
+  // const titleRef = useRef(null);
+  // const categoryRef = useRef(null);
+  // const amountRef = useRef(null);
+
   function handleSubmit(e) {
     e.preventDefault();
     // const data = getFormData(e.target);
@@ -22,6 +26,15 @@ export default function ExpenseForm({ setExpenses }) {
       category: "",
       amount: "",
     });
+
+    // const expense = {
+    //   title: titleRef.current.value,
+    //   category: categoryRef.current.value,
+    //   amount: +amountRef.current.value,
+    //   id: crypto.randomUUID(),
+    // };
+
+    // setExpenses((prev) => [...prev, expense]);
   }
 
   // function getFormData(form) {
@@ -46,6 +59,7 @@ export default function ExpenseForm({ setExpenses }) {
           onChange={(e) =>
             setExpense((prev) => ({ ...prev, title: e.target.value }))
           }
+          // ref={titleRef}
         />
       </div>
       <div className="input-container">
@@ -57,6 +71,7 @@ export default function ExpenseForm({ setExpenses }) {
           onChange={(e) =>
             setExpense((prev) => ({ ...prev, category: e.target.value }))
           }
+          // ref={categoryRef}
         >
           <option hidden>Select Category</option>
           <option value="Grocery">Grocery</option>
@@ -76,6 +91,7 @@ export default function ExpenseForm({ setExpenses }) {
           onChange={(e) =>
             setExpense((prev) => ({ ...prev, amount: e.target.value }))
           }
+          // ref={amountRef}
         />
       </div>
       <button className="add-btn">Add</button>
