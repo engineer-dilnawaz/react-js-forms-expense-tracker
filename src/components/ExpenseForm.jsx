@@ -13,7 +13,10 @@ export default function ExpenseForm({ setExpenses }) {
     // setExpenses((prev) => [...prev, data]);
     // e.target.reset();
 
-    setExpenses((prev) => [...prev, { ...expense, id: crypto.randomUUID() }]);
+    setExpenses((prev) => [
+      ...prev,
+      { ...expense, amount: +expense.amount, id: crypto.randomUUID() },
+    ]);
     setExpense({
       title: "",
       category: "",

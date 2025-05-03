@@ -1,4 +1,6 @@
 export default function ExpenseTable({ expnenses }) {
+  const totalAmount = expnenses.reduce((prev, cur) => prev + cur.amount, 0);
+
   return (
     <table className="expense-table">
       <thead>
@@ -53,7 +55,7 @@ export default function ExpenseTable({ expnenses }) {
         <tr>
           <th>Total</th>
           <th></th>
-          <th>₹8100</th>
+          <th>₹{totalAmount}</th>
         </tr>
       </tbody>
     </table>
