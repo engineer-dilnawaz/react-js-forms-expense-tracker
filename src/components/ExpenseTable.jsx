@@ -1,5 +1,15 @@
+import useFilter from "../hooks/useFilter";
+
 export default function ExpenseTable({ expnenses }) {
-  const totalAmount = expnenses.reduce((prev, cur) => prev + cur.amount, 0);
+  const [filteredExpenses, setQuery] = useFilter(
+    expnenses,
+    (data) => data.category
+  );
+
+  const totalAmount = filteredExpenses.reduce(
+    (prev, cur) => prev + cur.amount,
+    0
+  );
 
   return (
     <table className="expense-table">
@@ -7,7 +17,7 @@ export default function ExpenseTable({ expnenses }) {
         <tr>
           <th>Title</th>
           <th>
-            <select>
+            <select onChange={(e) => setQuery(e.target.value.toLowerCase())}>
               <option value="">All</option>
               <option value="grocery">Grocery</option>
               <option value="clothes">Clothes</option>
@@ -42,7 +52,7 @@ export default function ExpenseTable({ expnenses }) {
         </tr>
       </thead>
       <tbody>
-        {expnenses.map(({ id, title, category, amount }) => {
+        {filteredExpenses.map(({ id, title, category, amount }) => {
           return (
             <tr key={id}>
               <td>{title}</td>
