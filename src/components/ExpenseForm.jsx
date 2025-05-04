@@ -8,7 +8,7 @@ const options = ["Grocery", "Clothes", "Bills", "Education", "Medicine"];
 const validationConfig = {
   title: [
     { required: true, message: "Title is required" },
-    { minLength: 5, message: "Title should be at least 5 characters long" },
+    { minLength: 3, message: "Title should be at least 5 characters long" },
     { type: "string", message: "Title should only contain alphabetics" },
   ],
   category: [{ required: true, message: "Category is required" }],
@@ -18,13 +18,15 @@ const validationConfig = {
   ],
 };
 
-export default function ExpenseForm({ setExpenses }) {
-  const [expense, setExpense] = useState({
-    title: "",
-    category: "",
-    amount: "",
-  });
+const NUMBER_REGEX = /\d/;
 
+export default function ExpenseForm({
+  editingRowId,
+  expense,
+  setExpense,
+  setExpenses,
+  setEditingRowId,
+}) {
   const [errors, setErrors] = useState({});
 
   // const titleRef = useRef(null);
@@ -48,7 +50,7 @@ export default function ExpenseForm({ setExpenses }) {
           errorsData[key] = rule.message;
           return true;
         }
-        if (rule.type === "string" && /\d/.test(value)) {
+        if (rule.type === "string" && NUMBER_REGEX.test(value)) {
           errorsData[key] = rule.message;
           return true;
         }
@@ -79,10 +81,26 @@ export default function ExpenseForm({ setExpenses }) {
     // setExpenses((prev) => [...prev, data]);
     // e.target.reset();
 
-    setExpenses((prev) => [
-      ...prev,
-      { ...expense, amount: +expense.amount, id: crypto.randomUUID() },
-    ]);
+    if (editingRowId) {
+      setExpenses((prev) =>
+        prev.map((exp) => {
+          if (exp.id === editingRowId)
+            return {
+              ...exp,
+              ...expense,
+              amount: +expense.amount,
+            };
+          return exp;
+        })
+      );
+      setEditingRowId("");
+    } else {
+      setExpenses((prev) => [
+        ...prev,
+        { ...expense, amount: +expense.amount, id: crypto.randomUUID() },
+      ]);
+    }
+
     setExpense({
       title: "",
       category: "",
@@ -112,6 +130,12 @@ export default function ExpenseForm({ setExpenses }) {
 
   function handleOnChange(e) {
     const { name, value } = e.target;
+    if (name === "amount") {
+      if (NUMBER_REGEX.test(value)) {
+        setExpense((prev) => ({ ...prev, [name]: value }));
+      }
+      return;
+    }
     setErrors((prev) => ({ ...prev, [name]: "" }));
     setExpense((prev) => ({ ...prev, [name]: value }));
   }
@@ -143,7 +167,7 @@ export default function ExpenseForm({ setExpenses }) {
         onChange={handleOnChange}
         error={errors.amount}
       />
-      <button className="add-btn">Add</button>
+      <button className="add-btn">{editingRowId ? "Save" : "Add"}</button>
     </form>
   );
 }
